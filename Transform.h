@@ -11,7 +11,7 @@ class Transform: public Object3D
 public: 
   Transform(){}
  Transform( const Matrix4f& m, Object3D* obj ):o(obj){
-    
+    ;
   }
   ~Transform(){
   }

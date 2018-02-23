@@ -30,10 +30,9 @@ public:
   }
     
 
-  Vector3f Shade( const Ray& ray, const Hit& hit,
-                  const Vector3f& dirToLight, const Vector3f& lightColor ) {
-
-    return Vector3f(1,1,1) ; 
+  Vector3f Shade( const Ray& ray, const Hit& hit, const Vector3f& dirToLight, const Vector3f& lightColor ) {
+	Vector3f n = hit.getNormal();
+	return diffuseColor*max(Vector3f::dot(n,dirToLight),0.f)*lightColor/dirToLight.absSquared(); 
 		
   }
 

@@ -21,7 +21,7 @@ public:
   }
 	
   Group( int num_objects ){
-
+	  objects=vector<Object3D*>(num_objects);
   }
 
   ~Group(){
@@ -29,19 +29,22 @@ public:
   }
 
   virtual bool intersect( const Ray& r , Hit& h , float tmin ) {
-		return false;
+		bool inter= false;
+		for (int i=0;i<getGroupSize();i++)
+			inter=inter?inter:objects[i]->intersect(r,h,tmin);
+	    return inter;
    }
 	
   void addObject( int index , Object3D* obj ){
-
+	  objects[index]=obj;
   }
 
   int getGroupSize(){ 
-  
+	  return objects.size();
   }
 
  private:
-
+	 vector<Object3D*> objects;
 };
 
 #endif
