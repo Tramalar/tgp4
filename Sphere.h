@@ -29,10 +29,10 @@ public:
 	virtual bool intersect( const Ray& r , Hit& h , float tmin){
 		float b=2*Vector3f::dot(r.getDirection(),r.getOrigin()-center);
 		float c=Vector3f::dot(r.getOrigin()-center,r.getOrigin()-center)-radius*radius;
-		float d=sqrt(b*b-4*c);
+		float d=sqrt(b*b-4*r.getDirection().absSquared()*c);
 
-		float tp=(-b+d)/2;
-		float tm=(-b-d)/2;
+		float tp=(-b+d)/(2*r.getDirection().abs());
+		float tm=(-b-d)/(2*r.getDirection().abs());
 		float t=tp>tm?tm:tp;
 		float oldt=h.getT();
 		if(t>tmin&&t<oldt)h.set(t,material,(r.pointAtParameter(t)-center).normalized());

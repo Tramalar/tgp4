@@ -32,7 +32,11 @@ public:
 
   Vector3f Shade( const Ray& ray, const Hit& hit, const Vector3f& dirToLight, const Vector3f& lightColor ) {
 	Vector3f n = hit.getNormal();
-	return diffuseColor*max(Vector3f::dot(n,dirToLight),0.f)*lightColor/dirToLight.absSquared(); 
+	Vector3f R = (-1*dirToLight)+2*Vector3f::dot(dirToLight,n)*n;
+
+	Vector3f diff=diffuseColor*max(Vector3f::dot(n,dirToLight),0.f)*lightColor;
+	Vector3f spec=specularColor*pow(max(Vector3f::dot(R,dirToLight),0.f),shininess)*lightColor; 
+	return diff+spec;
 		
   }
 

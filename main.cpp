@@ -26,19 +26,29 @@ int main( int argc, char* argv[] )
 
   char* input,*output;
   int sizeX,sizeY;
+  vector<string> args=vector<string>();
   for( int argNum = 1; argNum < argc; ++argNum )
     {
-		switch(argNum){
-		case 2:
-			input=argv[argNum];break;
-		case 4:
-			sizeX=stoi(argv[argNum]);break;
-		case 5:
-			sizeY=stoi(argv[argNum]);break;
-		case 7:
-			output=(argv[argNum]);break;
+		try{
+			if(strcmp(argv[argNum],"-input")==0&&argNum+1<argc){
+				input=argv[++argNum];
+			}
+			else if(strcmp(argv[argNum],"-output")==0&&argNum+1<argc){
+				output=argv[++argNum];
+			}
+			else if(strcmp(argv[argNum],"-size")==0&&argNum+2<argc){
+				sizeX=stoi(argv[++argNum]);
+				sizeY=stoi(argv[++argNum]);				
+			}
+			else throw(out_of_range("Index out of range"));
+		}
+		catch (...){
+			cerr<<"bad commandline arguments";
+			return 1;
 		}
     }
+
+
 	
     
   // First, parse the scene using SceneParser.
@@ -53,14 +63,18 @@ int main( int argc, char* argv[] )
 		  Ray r=sp.getCamera()->generateRay(Vector2f(-1+(2*i+0.f)/sizeX,-1+(2*j+0.f)/sizeY));
 		  Hit h=Hit();
 		  bool hit=sp.getGroup()->intersect(r, h,0);
+		  image.SetPixel(i,j,sp.getBackgroundColor());
 		  if(hit){
 			  Vector3f dir;
-			  Vector3f col;		
+			  Vector3f col;
+			  Vector3f color;
 			  float dist=h.getT();
-			  Light *l=sp.getLight(0);
-			  l->getIllumination(r.pointAtParameter(h.getT()),dir,col,dist);
-			  Vector3f color= h.getMaterial()->Shade(r,h,dir,col);
-			  image.SetPixel(i,j,color);
+			  for(int k=0;k<sp.getNumLights();k++){
+				Light *l=sp.getLight(k);
+				l->getIllumination(r.pointAtParameter(h.getT()),dir,col,dist);
+				color=color+h.getMaterial()->Shade(r,h,dir,col);;
+			  }
+			image.SetPixel(i,j,color+sp.getAmbientLight()*h.getMaterial()->getDiffuseColor());
 		  }
 	  }
  
