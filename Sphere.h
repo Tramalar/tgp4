@@ -11,6 +11,9 @@ using namespace std;
 ///Implement functions and add more fields as necessary
 class Sphere: public Object3D
 {
+protected:
+	Vector3f center;
+	float radius;
 public:
 	Sphere(){ 
 		this->center=Vector3f(0,0,0);
@@ -26,22 +29,8 @@ public:
 
 	~Sphere(){}
 
-	virtual bool intersect( const Ray& r , Hit& h , float tmin){
-		float b=2*Vector3f::dot(r.getDirection(),r.getOrigin()-center);
-		float c=Vector3f::dot(r.getOrigin()-center,r.getOrigin()-center)-radius*radius;
-		float d=sqrt(b*b-4*r.getDirection().absSquared()*c);
+	virtual bool intersect( const Ray& r , Hit& h , float tmin);
 
-		float tp=(-b+d)/(2*r.getDirection().abs());
-		float tm=(-b-d)/(2*r.getDirection().abs());
-		float t=tp>tm?tm:tp;
-		float oldt=h.getT();
-		if(t>tmin&&t<oldt)h.set(t,material,(r.pointAtParameter(t)-center).normalized());
-		return t>tmin&&t<oldt;
-	}
-
-protected:
-	Vector3f center;
-	float radius;
 
 };
 

@@ -30,7 +30,7 @@ public:
 
   virtual bool intersect( const Ray& r , Hit& h , float tmin ) {
 		bool inter= false;
-		for (int i=0;i<getGroupSize();i++){
+		for (size_t i=0;i<getGroupSize();i++){
 			bool hit=objects[i]->intersect(r,h,tmin);
 			inter=inter?inter:hit;
 		}
